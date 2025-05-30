@@ -165,6 +165,38 @@
       display: none;
       z-index: 999;
     }
+    .loading-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px; /* Largura ajustada */
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .loading {
+      color: white;
+      font-size: 1.5em;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress {
+      height: 20px;
+      background-color: #4caf50;
+      width: 0%;
+      transition: width 0.4s;
+    }
   </style>
 </head>
 <body>
@@ -186,6 +218,13 @@
     <h3>Agendamento Confirmado</h3>
     <div id="resumoConteudo"></div>
     <button class="btn btn-send" style="margin-top:15px;" onclick="fecharResumo()">Fechar</button>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading">Enviando...<br><span id="loadingPercentage">0%</span></div>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
   </div>
 
   <script>
@@ -258,8 +297,23 @@
         });
       }
 
+      // Exibe o indicador de carregamento
+      document.getElementById("loadingOverlay").style.display = "flex";
+      let progress = 0;
+      const progressBar = document.getElementById("progress");
+      const loadingPercentage = document.getElementById("loadingPercentage");
+
+      // Simula o carregamento
+      const interval = setInterval(() => {
+        if (progress < 90) {
+          progress += 10;
+          progressBar.style.width = progress + "%";
+          loadingPercentage.textContent = progress + "%";
+        }
+      }, 100);
+
       // Substitua pela SUA URL do Web App
-      const URL_API = "https://script.google.com/macros/s/AKfycbyE2xna-Puo_YCT6IEqPBOOqTcrf_LbkE6k6PVhW346tyOCCfNVgVwLbM01iF-0i0iSDQ/exec";
+      const URL_API = "https://script.google.com/macros/s/AKfycbwWG7B0hdTdRe8QCxErEsVcga6FKpWIi5fec2r60b6Agz3I6Q21tIH47TcEb2r0ZGH-_g/exec";
 
       fetch(URL_API, {
         method: "POST",
@@ -271,21 +325,34 @@
           nome, ra, curso, agendamentos
         })
       }).then(() => {
-        // Exibe o resumo
-        let resumo = `<p><strong>Nome:</strong> ${nome}</p>
-                      <p><strong>RA:</strong> ${ra}</p>
-                      <p><strong>Curso:</strong> ${curso}</p>
-                      <p><strong>Data de envio:</strong> ${new Date().toLocaleString()}</p>
-                      <ul>`;
-        agendamentos.forEach(item => {
-          resumo += `<li><strong>${item.disciplina}:</strong> ${item.horario}</li>`;
-        });
-        resumo += `</ul>`;
+        clearInterval(interval); // Para a simulação de carregamento
+        progress = 100;
+        progressBar.style.width = progress + "%";
+        loadingPercentage.textContent = progress + "%";
 
-        document.getElementById("resumoConteudo").innerHTML = resumo;
-        document.getElementById("overlay").style.display = "block";
-        document.getElementById("resumoPopup").style.display = "block";
+        // Exibe o resumo após um pequeno atraso
+        setTimeout(() => {
+          // Oculta o indicador de carregamento
+          document.getElementById("loadingOverlay").style.display = "none";
+
+          // Exibe o resumo
+          let resumo = `<p><strong>Nome:</strong> ${nome}</p>
+                        <p><strong>RA:</strong> ${ra}</p>
+                        <p><strong>Curso:</strong> ${curso}</p>
+                        <p><strong>Data de envio:</strong> ${new Date().toLocaleString()}</p>
+                        <ul>`;
+          agendamentos.forEach(item => {
+            resumo += `<li><strong>${item.disciplina}:</strong> ${item.horario}</li>`;
+          });
+          resumo += `</ul>`;
+
+          document.getElementById("resumoConteudo").innerHTML = resumo;
+          document.getElementById("overlay").style.display = "block";
+          document.getElementById("resumoPopup").style.display = "block";
+        }, 500); // Atraso de 500ms para simular o tempo de processamento
       }).catch((error) => {
+        clearInterval(interval); // Para a simulação de carregamento
+        document.getElementById("loadingOverlay").style.display = "none";
         alert("Erro ao enviar: " + error.message);
       });
     }

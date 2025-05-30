@@ -238,61 +238,63 @@
     }
 
     function enviarFormulario() {
-  const nome = document.getElementById("nome").value.trim();
-  const ra = document.getElementById("ra").value.trim();
-  const curso = document.getElementById("curso").value.trim();
-  if (!nome || !ra || !curso) return alert("Preencha todos os campos obrigatórios.");
+      const nome = document.getElementById("nome").value.trim();
+      const ra = document.getElementById("ra").value.trim();
+      const curso = document.getElementById("curso").value.trim();
+      if (!nome || !ra || !curso) return alert("Preencha todos os campos obrigatórios.");
 
-  const disciplinas = document.querySelectorAll(".discipline");
-  if (disciplinas.length === 0) return alert("Adicione pelo menos uma disciplina.");
+      const disciplinas = document.querySelectorAll(".discipline");
+      if (disciplinas.length === 0) return alert("Adicione pelo menos uma disciplina.");
 
-  const agendamentos = [];
-  for (const d of disciplinas) {
-    const nomeDisc = d.querySelector(".nome-disciplina").value.trim();
-    const horarioSel = d.querySelector(".schedule-option.selected");
-    if (!nomeDisc || !horarioSel) return alert("Preencha todas as disciplinas e selecione um horário.");
-    agendamentos.push({
-      disciplina: nomeDisc,
-      horario: horarioSel.textContent
-    });
-  }
+      const agendamentos = [];
+      for (const d of disciplinas) {
+        const nomeDisc = d.querySelector(".nome-disciplina").value.trim();
+        const horarioSel = d.querySelector(".schedule-option.selected");
+        if (!nomeDisc || !horarioSel) return alert("Preencha todas as disciplinas e selecione um horário.");
+        agendamentos.push({
+          disciplina: nomeDisc,
+          horario: horarioSel.textContent
+        });
+      }
 
-  // Substitua pela SUA URL do Web App
-  const URL_API = "https://script.google.com/macros/s/AKfycbyE2xna-Puo_YCT6IEqPBOOqTcrf_LbkE6k6PVhW346tyOCCfNVgVwLbM01iF-0i0iSDQ/exec";
+      // Substitua pela SUA URL do Web App
+      const URL_API = "https://script.google.com/macros/s/AKfycbyE2xna-Puo_YCT6IEqPBOOqTcrf_LbkE6k6PVhW346tyOCCfNVgVwLbM01iF-0i0iSDQ/exec";
 
-  fetch(URL_API, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nome, ra, curso, agendamentos
-    })
-  }).then(() => {
-    // Exibe o resumo
-    let resumo = `<p><strong>Nome:</strong> ${nome}</p>
-                  <p><strong>RA:</strong> ${ra}</p>
-                  <p><strong>Curso:</strong> ${curso}</p>
-                  <p><strong>Data de envio:</strong> ${new Date().toLocaleString()}</p>
-                  <ul>`;
-    agendamentos.forEach(item => {
-      resumo += `<li><strong>${item.disciplina}:</strong> ${item.horario}</li>`;
-    });
-    resumo += `</ul>`;
+      fetch(URL_API, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nome, ra, curso, agendamentos
+        })
+      }).then(() => {
+        // Exibe o resumo
+        let resumo = `<p><strong>Nome:</strong> ${nome}</p>
+                      <p><strong>RA:</strong> ${ra}</p>
+                      <p><strong>Curso:</strong> ${curso}</p>
+                      <p><strong>Data de envio:</strong> ${new Date().toLocaleString()}</p>
+                      <ul>`;
+        agendamentos.forEach(item => {
+          resumo += `<li><strong>${item.disciplina}:</strong> ${item.horario}</li>`;
+        });
+        resumo += `</ul>`;
 
-    document.getElementById("resumoConteudo").innerHTML = resumo;
-    document.getElementById("overlay").style.display = "block";
-    document.getElementById("resumoPopup").style.display = "block";
-  }).catch((error) => {
-    alert("Erro ao enviar: " + error.message);
-  });
-}
+        document.getElementById("resumoConteudo").innerHTML = resumo;
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("resumoPopup").style.display = "block";
+      }).catch((error) => {
+        alert("Erro ao enviar: " + error.message);
+      });
+    }
+
     function fecharResumo() {
       document.getElementById("resumoPopup").style.display = "none";
       document.getElementById("overlay").style.display = "none";
+      // Atualiza a página para permitir um novo agendamento
+      location.reload();
     }
   </script>
 </body>
 </html>
-

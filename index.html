@@ -329,7 +329,11 @@
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          nome, ra, curso, agendamentos
+          token: "UnipAdminBC2025", // Adicionando o token
+          nome, 
+          ra, 
+          curso, 
+          agendamentos
         })
       }).then(() => {
         clearInterval(interval); // Para a simulação de carregamento

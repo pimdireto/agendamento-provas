@@ -197,6 +197,12 @@
       width: 0%;
       transition: width 0.4s;
     }
+    .credits {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -211,6 +217,7 @@
     <div id="disciplinas"></div>
     <button class="btn btn-add" onclick="adicionarDisciplina()">Adicionar Disciplina</button>
     <button class="btn btn-send" onclick="enviarFormulario()">Enviar</button>
+    <div class="credits">© 2025 - Desenvovlido por Thiago Nascimento</div>
   </div>
 
   <div class="overlay" id="overlay"></div>
@@ -313,7 +320,7 @@
       }, 100);
 
       // Substitua pela SUA URL do Web App
-      const URL_API = "https://script.google.com/macros/s/AKfycbzUl57DHs8oPBVMrhnvNPimWJ9beQijkLJMOKXz1WIyWu6AJ_-VahqTW2HApYgmH4D63g/exec";
+      const URL_API = "https://script.google.com/macros/s/AKfycbwWG7B0hdTdRe8QCxErEsVcga6FKpWIi5fec2r60b6Agz3I6Q21tIH47TcEb2r0ZGH-_g/exec";
 
       fetch(URL_API, {
         method: "POST",
